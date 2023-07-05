@@ -81,3 +81,25 @@ plot(c(sum(r10), sum(randr10)), main=c("observed", "randomized"))
 cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
       randomized=sapply(randr10, function(x)freq(x)[2,3]))
 
+## -----------------------------------------------------------------------------
+# bootstrapping once
+randff <- bootspat_ff(r10)
+
+## ---- str-ff, fig.height=4, fig.width=6---------------------------------------
+obs_fr <- unlist(terra::global(r10, function(x) sum(x, na.rm = TRUE)))
+v_seq <- order(obs_fr)
+plot(c(r10[[v_seq[length(v_seq)-1:4]]], randff[[v_seq[length(v_seq)-1:4]]]), 
+     nr=2, main=paste(rep(c("original", "null"), each=4), names(r10[[v_seq[length(v_seq)-1:4]]])))
+plot(c(r10[[v_seq[floor(length(v_seq)/2) + 2:-1]]], randff[[v_seq[floor(length(v_seq)/2)+ 2:-1]]]),
+     nr=2, main=paste(rep(c("original", "null"), each=4), names(r10[[v_seq[floor(length(v_seq)/2)+ 2:-1]]])))
+plot(c(r10[[v_seq[4:1]]], randff[[v_seq[4:1]]]), 
+     nr=2, main=paste(rep(c("original", "null"), each=4), names(r10[[v_seq[4:1]]])))
+
+
+## ---- str-ff-rich, fig.height=4, fig.width=6----------------------------------
+plot(c(sum(r10), sum(randff), sum(r10)-sum(randff)), main=c("observed", "randomized", "difference"), nr=1)
+
+## ---- table-freqff------------------------------------------------------------
+cbind(observed=sapply(r10, function(x)freq(x)[2,3]),
+      randomized=sapply(randff, function(x)freq(x)[2,3]))
+
